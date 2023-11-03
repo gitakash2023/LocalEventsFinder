@@ -1,12 +1,8 @@
 import {View, Text} from 'react-native';
-import Signup from './android/app/src/Screens/Signup';
+import Screens from './android/app/src/Screens/Screens';
 
 const App = () => {
-  return (
-    <View>
-      <Signup />
-    </View>
-  );
+  return <Screens />;
 };
 
 export default App;
