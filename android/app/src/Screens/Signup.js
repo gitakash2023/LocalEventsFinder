@@ -21,17 +21,16 @@ const Signup = () => {
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(res => {
-        console.log('signup');
-        navigation.navigate('HomeScreen');
-        alert('Success', 'User account created and signed in successfully!');
+        navigation.navigate('Home');
+        Alert.alert('User account created and signed in successfully!');
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
-          alert('Error', 'That email address is already in use.');
+          Alert.alert('Error', 'That email address is already in use.');
         }
 
         if (error.code === 'auth/invalid-email') {
-          alert('Error', 'That email address is invalid.');
+          Alert.alert('Error', 'That email address is invalid.');
         }
       })
       .finally(() => {
@@ -61,6 +60,7 @@ const Signup = () => {
             <TextInput
               style={styles.input}
               placeholder="Email"
+              placeholderTextColor="white"
               value={email}
               onChangeText={text => setEmail(text)}
             />
@@ -83,6 +83,7 @@ const Signup = () => {
             <TextInput
               style={styles.input}
               placeholder="Password"
+              placeholderTextColor="white"
               value={password}
               onChangeText={text => setPassword(text)}
             />
@@ -117,7 +118,7 @@ const Signup = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#222524',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -125,6 +126,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: 'white',
   },
   inputContainer: {
     width: '80%',
@@ -134,6 +136,7 @@ const styles = StyleSheet.create({
     width: 330,
     paddingHorizontal: 10,
     marginBottom: 10,
+    color: 'white',
   },
   inputFlex: {
     flexDirection: 'row',
@@ -159,8 +162,8 @@ const styles = StyleSheet.create({
   },
   loginLink: {
     marginTop: 20,
-    color: 'green',
-    fontSize: 16,
+    color: 'blue',
+    fontSize: 20,
   },
 });
 
