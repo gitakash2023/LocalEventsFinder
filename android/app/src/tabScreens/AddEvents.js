@@ -9,8 +9,11 @@ import {
   DatePickerAndroid,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import DropDownPicker from 'react-native-dropdown-picker';
+
 const AddEventForm = () => {
   const [eventName, setEventName] = useState('');
   const [eventDescription, setEventDescription] = useState('');
@@ -19,6 +22,19 @@ const AddEventForm = () => {
   const [ticketPrice, setTicketPrice] = useState('');
   const [organizer, setOrganizer] = useState('');
   const [contactPhone, setContactPhone] = useState('');
+  const [loading, setLoading] = useState(false);
+  //    dropdown start
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(['italy', 'spain', 'finland']);
+  const [items, setItems] = useState([
+    {label: 'Spain', value: 'spain'},
+
+    {label: 'Italy', value: 'italy'},
+
+    {label: 'Finland', value: 'finland'},
+  ]);
+  // end
+
   const isFormValid = () => {
     return (
       eventName.trim() !== '' &&
@@ -33,6 +49,7 @@ const AddEventForm = () => {
 
   const handleAddEvent = async () => {
     try {
+      setLoading(true);
       await firestore().collection('events').add({
         eventName: eventName,
         eventDescription: eventDescription,
@@ -50,6 +67,7 @@ const AddEventForm = () => {
         'Error adding event to Firestore. Please try again.',
       );
     } finally {
+      setLoading(false);
       setEventName('');
       setEventDescription('');
       setEventLocation('');
@@ -83,228 +101,258 @@ const AddEventForm = () => {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <View style={styles.borderBox}>
-          <View style={styles.inputFlex}>
-            <View style={styles.inputIcon}>
-              <Image
-                source={require('../Image/event.png')}
-                style={styles.icons}
-              />
-            </View>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder=" Enter Event Name"
-                //   placeholderTextColor="black"
-                value={eventName}
-                onChangeText={text => setEventName(text)}
-              />
-            </View>
-
-            {eventName.length > 0 && (
-              <View>
-                <TouchableOpacity onPress={handleCancelEventName}>
-                  <Image
-                    source={require('../Image/cancel.png')}
-                    style={styles.cancle}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+      <View style={styles.borderBox}>
+        <View style={styles.inputFlex}>
+          <View style={styles.inputIcon}>
+            <Image
+              source={require('../Image/event.png')}
+              style={styles.icons}
+            />
           </View>
-        </View>
-
-        <View style={styles.borderBox}>
-          <View style={styles.inputFlex}>
-            <View style={styles.inputIcon}>
-              <Image
-                source={require('../Image/description.png')}
-                style={styles.icons}
-              />
-            </View>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder=" Enter Event Description"
-                //   placeholderTextColor="black"
-                value={eventDescription}
-                onChangeText={text => setEventDescription(text)}
-              />
-            </View>
-
-            {eventDescription.length > 0 && (
-              <View>
-                <TouchableOpacity onPress={handleCancelDescription}>
-                  <Image
-                    source={require('../Image/cancel.png')}
-                    style={styles.cancle}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder=" Enter Event Name"
+              //   placeholderTextColor="black"
+              value={eventName}
+              onChangeText={text => setEventName(text)}
+            />
           </View>
-        </View>
 
-        <View style={styles.borderBox}>
-          <View style={styles.inputFlex}>
-            <View style={styles.inputIcon}>
-              <Image
-                source={require('../Image/eventlocation.png')}
-                style={styles.icons}
-              />
-            </View>
+          {eventName.length > 0 && (
             <View>
-              <TextInput
-                style={styles.input}
-                placeholder=" Enter Event Location"
-                //   placeholderTextColor="black"
-                value={eventLocation}
-                onChangeText={text => setEventLocation(text)}
-              />
+              <TouchableOpacity onPress={handleCancelEventName}>
+                <Image
+                  source={require('../Image/cancel.png')}
+                  style={styles.cancle}
+                />
+              </TouchableOpacity>
             </View>
-
-            {eventLocation.length > 0 && (
-              <View>
-                <TouchableOpacity onPress={handleCancelLocation}>
-                  <Image
-                    source={require('../Image/cancel.png')}
-                    style={styles.cancle}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        </View>
-        <View style={styles.borderBox}>
-          <View style={styles.inputFlex}>
-            <View style={styles.inputIcon}>
-              <Image
-                source={require('../Image/date.png')}
-                style={styles.icons}
-              />
-            </View>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder=" DD/MM/YY"
-                //   placeholderTextColor="black"
-                value={eventDate}
-                onChangeText={text => setEventDate(text)}
-              />
-            </View>
-
-            {eventDate.length > 0 && (
-              <View>
-                <TouchableOpacity onPress={handleCancelEventDate}>
-                  <Image
-                    source={require('../Image/cancel.png')}
-                    style={styles.cancle}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        </View>
-        <View style={styles.borderBox}>
-          <View style={styles.inputFlex}>
-            <View style={styles.inputIcon}>
-              <Image
-                source={require('../Image/ticketprice.png')}
-                style={styles.icons}
-              />
-            </View>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder=" ticket Price"
-                //   placeholderTextColor="black"
-                value={ticketPrice}
-                onChangeText={text => setTicketPrice(text)}
-              />
-            </View>
-
-            {ticketPrice.length > 0 && (
-              <View>
-                <TouchableOpacity onPress={handleCancelTcketPrice}>
-                  <Image
-                    source={require('../Image/cancel.png')}
-                    style={styles.cancle}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        </View>
-        <View style={styles.borderBox}>
-          <View style={styles.inputFlex}>
-            <View style={styles.inputIcon}>
-              <Image
-                source={require('../Image/organizer.png')}
-                style={styles.icons}
-              />
-            </View>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder=" organizer"
-                //   placeholderTextColor="black"
-                value={organizer}
-                onChangeText={text => setOrganizer(text)}
-              />
-            </View>
-
-            {organizer.length > 0 && (
-              <View>
-                <TouchableOpacity onPress={handleCancelOrganizer}>
-                  <Image
-                    source={require('../Image/cancel.png')}
-                    style={styles.cancle}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        </View>
-        <View style={styles.borderBox}>
-          <View style={styles.inputFlex}>
-            <View style={styles.inputIcon}>
-              <Image
-                source={require('../Image/phone.png')}
-                style={styles.icons}
-              />
-            </View>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder=" Phone number"
-                //   placeholderTextColor="black"
-                value={contactPhone}
-                onChangeText={text => setContactPhone(text)}
-              />
-            </View>
-
-            {contactPhone.length > 0 && (
-              <View>
-                <TouchableOpacity onPress={handleCancelPhone}>
-                  <Image
-                    source={require('../Image/cancel.png')}
-                    style={styles.cancle}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        </View>
-
-        <View style={{marginTop: 30}}>
-          <Button
-            title="Add Event"
-            onPress={handleAddEvent}
-            disabled={!isFormValid()}
-          />
+          )}
         </View>
       </View>
+
+      <View style={styles.borderBox}>
+        <View style={styles.inputFlex}>
+          <View style={styles.inputIcon}>
+            <Image
+              source={require('../Image/description.png')}
+              style={styles.icons}
+            />
+          </View>
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder=" Enter Event Description"
+              //   placeholderTextColor="black"
+              value={eventDescription}
+              onChangeText={text => setEventDescription(text)}
+            />
+          </View>
+
+          {eventDescription.length > 0 && (
+            <View>
+              <TouchableOpacity onPress={handleCancelDescription}>
+                <Image
+                  source={require('../Image/cancel.png')}
+                  style={styles.cancle}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </View>
+
+      <View style={styles.borderBox}>
+        <View style={styles.inputFlex}>
+          <View style={styles.inputIcon}>
+            <Image
+              source={require('../Image/eventlocation.png')}
+              style={styles.icons}
+            />
+          </View>
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder=" Enter Event Location"
+              //   placeholderTextColor="black"
+              value={eventLocation}
+              onChangeText={text => setEventLocation(text)}
+            />
+          </View>
+
+          {eventLocation.length > 0 && (
+            <View>
+              <TouchableOpacity onPress={handleCancelLocation}>
+                <Image
+                  source={require('../Image/cancel.png')}
+                  style={styles.cancle}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </View>
+
+      <View style={styles.borderBox}>
+        <View style={styles.inputFlex}>
+          <View style={styles.inputIcon}>
+            <Image source={require('../Image/date.png')} style={styles.icons} />
+          </View>
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder=" DD/MM/YY"
+              keyboardType="numeric"
+              //   placeholderTextColor="black"
+              value={eventDate}
+              onChangeText={text => setEventDate(text)}
+            />
+          </View>
+
+          {eventDate.length > 0 && (
+            <View>
+              <TouchableOpacity onPress={handleCancelEventDate}>
+                <Image
+                  source={require('../Image/cancel.png')}
+                  style={styles.cancle}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </View>
+
+      <View style={styles.borderBox}>
+        <View style={styles.inputFlex}>
+          <View style={styles.inputIcon}>
+            <Image
+              source={require('../Image/ticketprice.png')}
+              style={styles.icons}
+            />
+          </View>
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder=" Ticket Price"
+              keyboardType="numeric"
+              //   placeholderTextColor="black"
+              value={ticketPrice}
+              onChangeText={text => setTicketPrice(text)}
+            />
+          </View>
+
+          {ticketPrice.length > 0 && (
+            <View>
+              <TouchableOpacity onPress={handleCancelTcketPrice}>
+                <Image
+                  source={require('../Image/cancel.png')}
+                  style={styles.cancle}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </View>
+      <View style={styles.borderBox}>
+        <View style={styles.inputFlex}>
+          <View style={styles.inputIcon}>
+            <Image
+              source={require('../Image/organizer.png')}
+              style={styles.icons}
+            />
+          </View>
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder=" Organizer"
+              //   placeholderTextColor="black"
+              value={organizer}
+              onChangeText={text => setOrganizer(text)}
+            />
+          </View>
+
+          {organizer.length > 0 && (
+            <View>
+              <TouchableOpacity onPress={handleCancelOrganizer}>
+                <Image
+                  source={require('../Image/cancel.png')}
+                  style={styles.cancle}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </View>
+      <View style={styles.borderBox}>
+        <View style={styles.inputFlex}>
+          <View style={styles.inputIcon}>
+            <Image
+              source={require('../Image/phone.png')}
+              style={styles.icons}
+            />
+          </View>
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder=" Phone number"
+              keyboardType="numeric"
+              //   placeholderTextColor="black"
+              value={contactPhone}
+              onChangeText={text => setContactPhone(text)}
+            />
+          </View>
+
+          {contactPhone.length > 0 && (
+            <View>
+              <TouchableOpacity onPress={handleCancelPhone}>
+                <Image
+                  source={require('../Image/cancel.png')}
+                  style={styles.cancle}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </View>
+      {/* start dropdown */}
+      <View>
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          theme="DARK"
+          multiple={false}
+          mode="BADGE"
+          badgeDotColors={[
+            '#e76f51',
+            '#00b4d8',
+            '#e9c46a',
+            '#e76f51',
+            '#8ac926',
+            '#00b4d8',
+            '#e9c46a',
+          ]}
+        />
+      </View>
+      {/* end dropdown */}
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <View style={{marginTop: 20}}>
+          {isFormValid() && (
+            <Button
+              title="Add Event"
+              onPress={handleAddEvent}
+              disabled={!isFormValid()}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 };
@@ -315,8 +363,8 @@ const styles = StyleSheet.create({
 
     flex: 1,
 
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   inputFlex: {
     flexDirection: 'row',
