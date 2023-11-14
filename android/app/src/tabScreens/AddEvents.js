@@ -106,7 +106,7 @@ const AddEventForm = () => {
               <View>
                 <TouchableOpacity onPress={handleCancelEventName}>
                   <Image
-                    source={require('../Image/cancel.jpg')}
+                    source={require('../Image/cancel.png')}
                     style={styles.cancle}
                   />
                 </TouchableOpacity>
@@ -137,7 +137,7 @@ const AddEventForm = () => {
               <View>
                 <TouchableOpacity onPress={handleCancelDescription}>
                   <Image
-                    source={require('../Image/cancel.jpg')}
+                    source={require('../Image/cancel.png')}
                     style={styles.cancle}
                   />
                 </TouchableOpacity>
@@ -168,7 +168,7 @@ const AddEventForm = () => {
               <View>
                 <TouchableOpacity onPress={handleCancelLocation}>
                   <Image
-                    source={require('../Image/cancel.jpg')}
+                    source={require('../Image/cancel.png')}
                     style={styles.cancle}
                   />
                 </TouchableOpacity>
@@ -198,7 +198,7 @@ const AddEventForm = () => {
               <View>
                 <TouchableOpacity onPress={handleCancelEventDate}>
                   <Image
-                    source={require('../Image/cancel.jpg')}
+                    source={require('../Image/cancel.png')}
                     style={styles.cancle}
                   />
                 </TouchableOpacity>
@@ -228,7 +228,7 @@ const AddEventForm = () => {
               <View>
                 <TouchableOpacity onPress={handleCancelTcketPrice}>
                   <Image
-                    source={require('../Image/cancel.jpg')}
+                    source={require('../Image/cancel.png')}
                     style={styles.cancle}
                   />
                 </TouchableOpacity>
@@ -258,7 +258,7 @@ const AddEventForm = () => {
               <View>
                 <TouchableOpacity onPress={handleCancelOrganizer}>
                   <Image
-                    source={require('../Image/cancel.jpg')}
+                    source={require('../Image/cancel.png')}
                     style={styles.cancle}
                   />
                 </TouchableOpacity>
@@ -288,7 +288,7 @@ const AddEventForm = () => {
               <View>
                 <TouchableOpacity onPress={handleCancelPhone}>
                   <Image
-                    source={require('../Image/cancel.jpg')}
+                    source={require('../Image/cancel.png')}
                     style={styles.cancle}
                   />
                 </TouchableOpacity>

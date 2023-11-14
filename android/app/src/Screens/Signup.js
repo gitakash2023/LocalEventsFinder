@@ -70,7 +70,7 @@ const Signup = () => {
             <View>
               <TouchableOpacity onPress={handleEmptyEmail}>
                 <Image
-                  source={require('../Image/cancel.jpg')}
+                  source={require('../Image/cancel.png')}
                   style={styles.cancle}
                 />
               </TouchableOpacity>
@@ -93,7 +93,7 @@ const Signup = () => {
             <View>
               <TouchableOpacity onPress={handleEmptyPassword}>
                 <Image
-                  source={require('../Image/cancel.jpg')}
+                  source={require('../Image/cancel.png')}
                   style={styles.cancle}
                 />
               </TouchableOpacity>
