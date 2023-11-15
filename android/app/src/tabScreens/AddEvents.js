@@ -13,16 +13,22 @@ import {
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import DropDownPicker from 'react-native-dropdown-picker';
+import storage from '@react-native-firebase/storage';
+import DatePicker from 'react-native-datepicker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const AddEventForm = () => {
   const [eventName, setEventName] = useState('');
   const [eventDescription, setEventDescription] = useState('');
   const [eventLocation, setEventLocation] = useState('');
-  const [eventDate, setEventDate] = useState('');
+
   const [ticketPrice, setTicketPrice] = useState('');
   const [organizer, setOrganizer] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [loading, setLoading] = useState(false);
+  //   img and date picker
+  const [imageUri, setImageUri] = useState(null);
+  const [eventDate, setEventDate] = useState('');
   //    dropdown start
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(['italy', 'spain', 'finland']);
@@ -46,6 +52,37 @@ const AddEventForm = () => {
       contactPhone.trim() !== ''
     );
   };
+  const handlePickImage = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        includeBase64: false,
+      },
+      response => {
+        if (!response.didCancel) {
+          setImageUri(response.uri);
+        }
+      },
+    );
+  };
+
+  const uploadImage = async () => {
+    if (!imageUri) {
+      return null; // No image selected
+    }
+
+    const fileName = imageUri.substring(imageUri.lastIndexOf('/') + 1);
+    const reference = storage().ref(`images/${fileName}`);
+
+    try {
+      await reference.putFile(imageUri);
+      const downloadUrl = await reference.getDownloadURL();
+      return downloadUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  };
 
   const handleAddEvent = async () => {
     try {
@@ -58,6 +95,8 @@ const AddEventForm = () => {
         ticketPrice: ticketPrice,
         organizer: organizer,
         contactPhone: contactPhone,
+        imageUrl: imageUri,
+        eventDate: eventDate,
       });
 
       Alert.alert('Success', 'Event added to Firestore!');
@@ -75,6 +114,8 @@ const AddEventForm = () => {
       setTicketPrice('');
       setOrganizer('');
       setContactPhone('');
+      setImageUri(null);
+      setEventDate('');
     }
   };
 
@@ -101,6 +142,40 @@ const AddEventForm = () => {
   };
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={handlePickImage}>
+        <View style={styles.imagePickerContainer}>
+          {imageUri ? (
+            <Image source={{uri: imageUri}} style={styles.imagePreview} />
+          ) : (
+            <Text style={styles.imagePickerText}>Pick an Image</Text>
+          )}
+        </View>
+      </TouchableOpacity>
+
+      {/* Date Picker */}
+      <DatePicker
+        style={styles.input}
+        date={eventDate}
+        mode="date"
+        placeholder="Select Event Date"
+        format="YYYY-MM-DD"
+        minDate={new Date().toISOString().split('T')[0]}
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            left: 0,
+            top: 4,
+            marginLeft: 0,
+          },
+          dateInput: {
+            marginLeft: 36,
+          },
+        }}
+        onDateChange={date => setEventDate(date)}
+      />
+
       <View style={styles.borderBox}>
         <View style={styles.inputFlex}>
           <View style={styles.inputIcon}>
@@ -412,6 +487,24 @@ const styles = StyleSheet.create({
 
   multilineInput: {
     height: 80,
+  },
+  imagePickerContainer: {
+    width: '100%',
+    height: 200,
+    backgroundColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginBottom: 10,
+  },
+  imagePreview: {
+    width: '100%',
+    height: '100%',
+  },
+  imagePickerText: {
+    fontSize: 18,
+    color: '#333',
   },
 });
 
