@@ -326,16 +326,16 @@ const AddEventForm = () => {
           setItems={setItems}
           theme="DARK"
           multiple={false}
-          mode="BADGE"
-          badgeDotColors={[
-            '#e76f51',
-            '#00b4d8',
-            '#e9c46a',
-            '#e76f51',
-            '#8ac926',
-            '#00b4d8',
-            '#e9c46a',
-          ]}
+          //   mode="BADGE"
+          //   badgeDotColors={[
+          //     '#e76f51',
+          //     '#00b4d8',
+          //     '#e9c46a',
+          //     '#e76f51',
+          //     '#8ac926',
+          //     '#00b4d8',
+          //     '#e9c46a',
+          //   ]}
         />
       </View>
       {/* end dropdown */}
