@@ -1,14 +1,16 @@
-import {View, Text, Alert} from 'react-native';
+import {View, Text, Alert, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const Events = () => {
-  const [events, setEvents] = useState([]);
+  const [eventsData, setEventsData] = useState([]);
+
   const retreiveEvents = () => {
     firestore()
       .collection('events')
       // Filter results
-      // .where('userId', '==', auth().currentUser.email)
+      .where('userId', '==', auth().currentUser.email)
       .get()
       .then(querySnapshot => {
         const data = [];
@@ -19,7 +21,7 @@ const Events = () => {
           data.push(documentData);
         });
         console.log({data: data[0]});
-        setEvents(data);
+        setEventsData(data);
       })
       .catch(error => {
         Alert.alert(error);
@@ -27,10 +29,22 @@ const Events = () => {
   };
   useEffect(() => {
     retreiveEvents();
-  });
+  }, []);
   return (
     <View>
-      <Text>Events</Text>
+      <Text>Events Screen</Text>
+      <FlatList
+        data={eventsData}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <View>
+            <Text>{item.eventName}</Text>
+            <Text>{item.eventDescription}</Text>
+            <Text>{item.eventDate}</Text>
+            <Text>{item.ticketPrice}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 };
