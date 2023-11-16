@@ -1,67 +1,30 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Button,
-  Modal,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  ActivityIndicator,
-  NativeEventEmitter,
-  Alert,
-} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+// import {View, Text} from 'react-native';
+// import React from 'react';
+// import {createDrawerNavigator} from '@react-navigation/drawer';
+// import SavedEvents from '../drawerScreens/SavedEvents';
+// import MyEvents from '../drawerScreens/MyEvents';
+// import Logout from '../drawerScreens/Logout';
+// const Drawer = createDrawerNavigator();
+// const Setting = () => {
+//   return (
+//     <Drawer.Navigator>
+//       <Drawer.Screen name="SavedEvents" component={SavedEvents} />
+//       <Drawer.Screen name="MyEvents" component={MyEvents} />
+//       <Drawer.Screen name="Logout" component={Logout} />
+//     </Drawer.Navigator>
+//   );
+// };
 
-import auth from '@react-native-firebase/auth';
+// export default Setting;
+import {View, Text} from 'react-native';
+import React from 'react';
 
 const Setting = () => {
-  const navigation = useNavigation();
-
-  const [isLodingLogout, setIsLodingLogout] = useState(false);
-  //  handleLogout
-  const handleLogout = () => {
-    setIsLodingLogout(true);
-    auth()
-      .signOut()
-      .then(res => {
-        setIsLodingLogout(false);
-        Alert.alert('logged out');
-        navigation.navigate('Login');
-      })
-      .catch(error => {
-        Alert.alert(error);
-      })
-      .finally(() => {
-        setIsLodingLogout(false); // Clear the logout in progress, whether it succeeded or failed
-      });
-  };
   return (
-    <View style={{alignSelf: 'flex-end'}}>
-      <View>
-        {isLodingLogout ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <TouchableOpacity onPress={handleLogout}>
-            <Image
-              source={require('../Image/logOut.jpg')}
-              style={styles.logoutButton}
-            />
-          </TouchableOpacity>
-        )}
-      </View>
+    <View>
+      <Text>Setting</Text>
     </View>
   );
 };
-const styles = StyleSheet.create({
-  logoutButton: {
-    width: 60,
-    height: 60,
-    marginTop: 20,
-    marginRight: 20,
-  },
-});
 
 export default Setting;
