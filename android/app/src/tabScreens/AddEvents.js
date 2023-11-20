@@ -73,7 +73,7 @@ const AddEventForm = () => {
           setImageUri(response.uri);
           try {
             const downloadUrl = await uploadImageToStorage(response.uri);
-            await handleAddEvent(downloadUrl);
+            await saveImageToFirestore(downloadUrl);
             Alert.alert('Image Upload Success', `Download URL: ${downloadUrl}`);
           } catch (error) {
             Alert.alert(
@@ -94,6 +94,16 @@ const AddEventForm = () => {
       await reference.putFile(uri);
       const downloadUrl = await reference.getDownloadURL();
       return downloadUrl;
+    } catch (error) {
+      throw error;
+    }
+  };
+  const saveImageToFirestore = async downloadUrl => {
+    try {
+      await firestore().collection('images').add({
+        imageUrl: downloadUrl,
+        createdAt: new Date(),
+      });
     } catch (error) {
       throw error;
     }
