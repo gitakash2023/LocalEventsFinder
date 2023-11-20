@@ -73,7 +73,7 @@ const AddEventForm = () => {
           setImageUri(response.uri);
           try {
             const downloadUrl = await uploadImageToStorage(response.uri);
-            await saveImageToFirestore(downloadUrl);
+            await handleAddEvent(downloadUrl);
             Alert.alert('Image Upload Success', `Download URL: ${downloadUrl}`);
           } catch (error) {
             Alert.alert(
