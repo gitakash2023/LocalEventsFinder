@@ -62,25 +62,89 @@ const AddEventForm = () => {
       imageUri !== null
     );
   };
+  // const handlePickImage = () => {
+  //   launchImageLibrary(
+  //     {
+  //       mediaType: 'photo',
+  //       // includeBase64: false,
+  //     },
+  //     async response => {
+  //       if (!response.didCancel && response.uri) {
+  //         setImageUri(response.uri);
+  //         try {
+  //           const downloadUrl = await uploadImageToStorage(response.uri);
+  //           await handleAddEvent(downloadUrl);
+  //           Alert.alert('Image Upload Success', `Download URL: ${downloadUrl}`);
+  //         } catch (error) {
+  //           Alert.alert(
+  //             'Image Upload Failed',
+  //             'Error uploading image. Please try again.',
+  //           );
+  //         }
+  //       }
+  //     },
+  //   );
+  // };
+
+  // const uploadImageToStorage = async uri => {
+  //   const fileName = uri.substring(uri.lastIndexOf('/') + 1);
+  //   const reference = storage().ref(`images/${fileName}`);
+
+  //   try {
+  //     await reference.putFile(uri);
+  //     const downloadUrl = await reference.getDownloadURL();
+  //     return downloadUrl;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
+
+  // const handleAddEvent = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     console.log('img ho gya');
+  //     await firestore().collection('events').add({
+  //       eventName: eventName,
+  //       eventDescription: eventDescription,
+  //       eventLocation: eventLocation,
+  //       eventDate: eventDate,
+  //       ticketPrice: ticketPrice,
+  //       organizer: organizer,
+  //       contactPhone: contactPhone,
+  //       imageUrl: downloadUrl,
+  //       eventTypes: value, // Add the selected event types
+  //       createdAt: new Date(),
+  //       userId: auth().currentUser.email,
+  //     });
+
+  //     Alert.alert('Success', 'Event added to Firestore!');
+  //   } catch (error) {
+  //     Alert.alert(
+  //       'Error',
+  //       'Error adding event to Firestore. Please try again.',
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //     setEventName('');
+  //     setEventDescription('');
+  //     setEventLocation('');
+  //     setEventDate('');
+  //     setTicketPrice('');
+  //     setOrganizer('');
+  //     setContactPhone('');
+  //     setImageUri(null);
+  //   }
+  // };
+
   const handlePickImage = () => {
     launchImageLibrary(
       {
         mediaType: 'photo',
-        // includeBase64: false,
       },
       async response => {
         if (!response.didCancel && response.uri) {
           setImageUri(response.uri);
-          try {
-            const downloadUrl = await uploadImageToStorage(response.uri);
-            await handleAddEvent(downloadUrl);
-            Alert.alert('Image Upload Success', `Download URL: ${downloadUrl}`);
-          } catch (error) {
-            Alert.alert(
-              'Image Upload Failed',
-              'Error uploading image. Please try again.',
-            );
-          }
         }
       },
     );
@@ -95,6 +159,7 @@ const AddEventForm = () => {
       const downloadUrl = await reference.getDownloadURL();
       return downloadUrl;
     } catch (error) {
+      console.error('Error uploading image to storage:', error);
       throw error;
     }
   };
@@ -103,7 +168,16 @@ const AddEventForm = () => {
     try {
       setLoading(true);
 
-      console.log('img ho gya');
+      // Check if an image is selected
+      if (!imageUri) {
+        Alert.alert('Error', 'Please select an image for the event.');
+        return;
+      }
+
+      // Upload the image to Firebase Storage and get the download URL
+      const imageUrl = await uploadImageToStorage(imageUri);
+
+      // Add the event details to Firestore
       await firestore().collection('events').add({
         eventName: eventName,
         eventDescription: eventDescription,
@@ -112,8 +186,8 @@ const AddEventForm = () => {
         ticketPrice: ticketPrice,
         organizer: organizer,
         contactPhone: contactPhone,
-        imageUrl: downloadUrl,
-        eventTypes: value, // Add the selected event types
+        imageUrl: imageUrl, // Use the download URL obtained from Storage
+        eventTypes: value,
         createdAt: new Date(),
         userId: auth().currentUser.email,
       });
