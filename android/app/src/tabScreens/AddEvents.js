@@ -143,8 +143,8 @@ const AddEventForm = () => {
         mediaType: 'photo',
       },
       async response => {
-        if (!response.didCancel && response.uri) {
-          setImageUri(response.uri);
+        if (!response.didCancel && response.assets[0].uri) {
+          setImageUri(response.assets[0].uri);
         }
       },
     );

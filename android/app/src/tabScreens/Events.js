@@ -1,4 +1,12 @@
-import {View, Text, Alert, FlatList, Image, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Alert,
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -38,12 +46,12 @@ const Events = () => {
           data={eventsData}
           keyExtractor={item => item.id}
           renderItem={({item}) => (
-            <View>
+            <View style={styles.eventContainer}>
               <Text>{item.eventName}</Text>
               <Text>{item.eventDescription}</Text>
               <Text>{item.eventDate}</Text>
               <Text>{item.ticketPrice}</Text>
-              <Image source={{uri: item.imageUrl}} />
+              <Image source={{uri: item.imageUrl}} style={styles.eventImage} />
             </View>
           )}
         />
@@ -51,5 +59,12 @@ const Events = () => {
     </View>
   );
 };
+const styles = StyleSheet.create({
+  eventImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover', // Adjust the resizeMode based on your requirements
+  },
+});
 
 export default Events;
